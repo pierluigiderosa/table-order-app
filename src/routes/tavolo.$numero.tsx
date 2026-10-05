@@ -48,7 +48,7 @@ function TablePage() {
   });
 
   const items = useMemo(
-    () => products.filter((p) => cart[p.id]).map((p) => ({ ...p, qty: cart[p.id] })),
+    () => products.filter((p) => cart[p.id]).map((p) => ({ ...p, qty: cart[p.id] ?? 0 })),
     [products, cart],
   );
   const total = items.reduce((s, i) => s + Number(i.price) * i.qty, 0);

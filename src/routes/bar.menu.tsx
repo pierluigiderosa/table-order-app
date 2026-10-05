@@ -31,7 +31,10 @@ function MenuAdmin() {
   const add = async (e: React.FormEvent) => {
     e.preventDefault();
     const price = parseFloat(form.price.replace(",", "."));
-    if (!form.name.trim() || isNaN(price) || price < 0) return toast.error("Nome e prezzo validi richiesti");
+    if (!form.name.trim() || isNaN(price) || price < 0) {
+      toast.error("Nome e prezzo validi richiesti");
+      return;
+    }
     const { error } = await supabase.from("products").insert({
       name: form.name.trim().slice(0, 80),
       description: form.description.trim().slice(0, 200),
@@ -39,7 +42,10 @@ function MenuAdmin() {
       kind: form.kind,
       sort_order: products.length + 1,
     });
-    if (error) return toast.error("Errore nel salvataggio");
+    if (error) {
+      toast.error("Errore nel salvataggio");
+      return;
+    }
     setForm({ name: "", description: "", price: "", kind: form.kind });
     refresh();
   };
