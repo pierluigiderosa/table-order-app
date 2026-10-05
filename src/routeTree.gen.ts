@@ -10,33 +10,104 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BarRouteImport } from './routes/bar'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as BarIndexRouteImport } from './routes/bar.index'
+import { Route as BarMenuRouteImport } from './routes/bar.menu'
+import { Route as BarQrRouteImport } from './routes/bar.qr'
+import { Route as TavoloNumeroRouteImport } from './routes/tavolo.$numero'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BarRoute = BarRouteImport.update({
+  id: '/bar',
+  path: '/bar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BarIndexRoute = BarIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BarRoute,
+} as any)
+const BarMenuRoute = BarMenuRouteImport.update({
+  id: '/menu',
+  path: '/menu',
+  getParentRoute: () => BarRoute,
+} as any)
+const BarQrRoute = BarQrRouteImport.update({
+  id: '/qr',
+  path: '/qr',
+  getParentRoute: () => BarRoute,
+} as any)
+const TavoloNumeroRoute = TavoloNumeroRouteImport.update({
+  id: '/tavolo/$numero',
+  path: '/tavolo/$numero',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bar': typeof BarRouteWithChildren
+  '/login': typeof LoginRoute
+  '/bar/menu': typeof BarMenuRoute
+  '/bar/qr': typeof BarQrRoute
+  '/tavolo/$numero': typeof TavoloNumeroRoute
+  '/bar/': typeof BarIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/bar/menu': typeof BarMenuRoute
+  '/bar/qr': typeof BarQrRoute
+  '/tavolo/$numero': typeof TavoloNumeroRoute
+  '/bar': typeof BarIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bar': typeof BarRouteWithChildren
+  '/login': typeof LoginRoute
+  '/bar/menu': typeof BarMenuRoute
+  '/bar/qr': typeof BarQrRoute
+  '/tavolo/$numero': typeof TavoloNumeroRoute
+  '/bar/': typeof BarIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/bar'
+    | '/login'
+    | '/bar/menu'
+    | '/bar/qr'
+    | '/tavolo/$numero'
+    | '/bar/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/login' | '/bar/menu' | '/bar/qr' | '/tavolo/$numero' | '/bar'
+  id:
+    | '__root__'
+    | '/'
+    | '/bar'
+    | '/login'
+    | '/bar/menu'
+    | '/bar/qr'
+    | '/tavolo/$numero'
+    | '/bar/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BarRoute: typeof BarRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  TavoloNumeroRoute: typeof TavoloNumeroRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +119,70 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bar': {
+      id: '/bar'
+      path: '/bar'
+      fullPath: '/bar'
+      preLoaderRoute: typeof BarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bar/': {
+      id: '/bar/'
+      path: '/'
+      fullPath: '/bar/'
+      preLoaderRoute: typeof BarIndexRouteImport
+      parentRoute: typeof BarRoute
+    }
+    '/bar/menu': {
+      id: '/bar/menu'
+      path: '/menu'
+      fullPath: '/bar/menu'
+      preLoaderRoute: typeof BarMenuRouteImport
+      parentRoute: typeof BarRoute
+    }
+    '/bar/qr': {
+      id: '/bar/qr'
+      path: '/qr'
+      fullPath: '/bar/qr'
+      preLoaderRoute: typeof BarQrRouteImport
+      parentRoute: typeof BarRoute
+    }
+    '/tavolo/$numero': {
+      id: '/tavolo/$numero'
+      path: '/tavolo/$numero'
+      fullPath: '/tavolo/$numero'
+      preLoaderRoute: typeof TavoloNumeroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface BarRouteChildren {
+  BarMenuRoute: typeof BarMenuRoute
+  BarQrRoute: typeof BarQrRoute
+  BarIndexRoute: typeof BarIndexRoute
+}
+
+const BarRouteChildren: BarRouteChildren = {
+  BarMenuRoute: BarMenuRoute,
+  BarQrRoute: BarQrRoute,
+  BarIndexRoute: BarIndexRoute,
+}
+
+const BarRouteWithChildren = BarRoute._addFileChildren(BarRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BarRoute: BarRouteWithChildren,
+  LoginRoute: LoginRoute,
+  TavoloNumeroRoute: TavoloNumeroRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
