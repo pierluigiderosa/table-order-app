@@ -151,7 +151,8 @@ function TablePage() {
                 value={name}
                 maxLength={60}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Il tuo nome (facoltativo)"
+                placeholder="Il tuo nome (obbligatorio)"
+                required
                 className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
               />
             </div>
@@ -163,7 +164,7 @@ function TablePage() {
               className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
             />
             <button
-              disabled={sending}
+              disabled={sending || !name.trim()}
               onClick={submit}
               className="flex w-full items-center justify-between rounded-lg bg-primary px-5 py-3 font-display text-2xl text-primary-foreground shadow-glow disabled:opacity-60"
             >
