@@ -3,7 +3,7 @@ import { z } from "zod";
 
 const schema = z.object({
   table: z.number().int().min(1).max(500),
-  name: z.string().trim().max(60).default(""),
+  name: z.string().trim().min(1, "Inserisci il tuo nome").max(60),
   note: z.string().trim().max(300).default(""),
   items: z
     .array(z.object({ id: z.string().uuid(), qty: z.number().int().min(1).max(50) }))

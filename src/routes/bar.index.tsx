@@ -73,6 +73,11 @@ function Orders() {
     qc.invalidateQueries({ queryKey: ["orders"] });
   };
 
+  const setPaid = async (id: string, paid: boolean) => {
+    await supabase.from("orders").update({ paid }).eq("id", id);
+    qc.invalidateQueries({ queryKey: ["orders"] });
+  };
+
   const visible = orders.filter((o) => (showServed ? o.status === "served" : o.status !== "served"));
   if (showServed) visible.reverse();
 
@@ -139,6 +144,33 @@ function Orders() {
               {o.note && <p className="mt-3 rounded-lg bg-muted p-2 text-sm">📝 {o.note}</p>}
               <div className="mt-4 flex items-center justify-between">
                 <span className="font-semibold">{euro(Number(o.total))}</span>
+                <button
+                  onClick={() => setPaid(o.id, !o.paid)}
+                  className={`rounded-full px-3 py-1 text-sm font-semibold ${
+                    o.paid ? "bg-success text-primary-foreground" : "bg-destructive text-destructive-foreground"
+                  }`}
+                  title="Tocca per cambiare"
+                >
+                  {o.paid ? "✓ Pagato" : "✗ Non pagato"}
+                </button>
+              </div>
+              <div className="mt-3 flex flex-wrap justify-end gap-2">
+                {o.status === "served" && (
+                  <button
+                    onClick={() => setStatus(o.id, "preparing")}
+                    className="rounded-lg bg-secondary px-4 py-2 text-sm"
+                  >
+                    ↩ Ripristina in preparazione
+                  </button>
+                )}
+                {o.status === "preparing" && (
+                  <button
+                    onClick={() => setStatus(o.id, "new")}
+                    className="rounded-lg bg-secondary px-4 py-2 text-sm"
+                  >
+                    ↩ Torna a nuova
+                  </button>
+                )}
                 {st.next && (
                   <button
                     onClick={() => setStatus(o.id, st.next!)}

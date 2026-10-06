@@ -58,6 +58,7 @@ export type Database = {
           customer_name: string
           id: string
           note: string
+          paid: boolean
           status: string
           table_number: number
           total: number
@@ -67,6 +68,7 @@ export type Database = {
           customer_name?: string
           id?: string
           note?: string
+          paid?: boolean
           status?: string
           table_number: number
           total?: number
@@ -76,6 +78,7 @@ export type Database = {
           customer_name?: string
           id?: string
           note?: string
+          paid?: boolean
           status?: string
           table_number?: number
           total?: number
